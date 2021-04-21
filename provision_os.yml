@@ -1,0 +1,42 @@
+- hosts: 127.0.0.1
+  vars_files:
+          - keys.yml
+  tasks:
+          - name: Provision Web Server EC2
+            ec2:
+                    key_name: key-for-haproxy
+                    instance_type: t2.micro
+                    image: ami-0bcf5425cdc1d8a85
+                    wait: yes
+                    group_id: sg-6a17ef0c
+                    count: 2
+                    vpc_subnet_id: subnet-8beffbe3
+                    assign_public_ip: yes
+                    region: ap-south-1
+                    state: present
+                    aws_access_key: "{{ access_key }}" 
+                    aws_secret_key: "{{ secret_key }}" 
+                    instance_tags:
+                            name: webserver
+          
+
+          - name: Provision Load Balancer EC2
+            ec2:
+                    key_name: key-for-haproxy
+                    instance_type: t2.micro
+                    image: ami-0bcf5425cdc1d8a85
+                    wait: yes
+                    group_id: sg-6a17ef0c
+                    count: 1
+                    vpc_subnet_id: subnet-8beffbe3
+                    assign_public_ip: yes
+                    region: ap-south-1
+                    state: present
+                    aws_access_key: "{{ access_key }}" 
+                    aws_secret_key: "{{ secret_key }}" 
+                    instance_tags:
+                            name: loadbalancer
+
+
+
+
